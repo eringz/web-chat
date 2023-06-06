@@ -1,0 +1,27 @@
+.header{
+    padding: 20px;
+}
+
+.message{
+    background-color: #E4E6EB;
+    display: flex;
+    padding: 20px;
+    margin: 5px;
+    border-radius: 8px;
+}
+.message:hover{
+    background-color: #D5D5D5;
+}
+
+    .img{
+        width: 18%;
+        border-radius: 200px;
+    }
+    .friend{
+        font-size: 1rem;
+        font-weight: bolder;
+    }
+    .content{
+        color: #65676B;
+    }
+

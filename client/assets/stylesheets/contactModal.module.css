@@ -1,0 +1,85 @@
+.modalBackground {
+    width: 100vw;
+    height: 100vh;
+    /* background-color: rgba(200, 200, 200); */
+    background-color: transparent;
+    position: absolute;
+    top: 3%;
+    left: 19%;
+    /* display: flex; */
+    justify-content: center;
+    align-items: top;
+  }
+  
+  .modalContainer {
+    width: 500px;
+    min-height: 500px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+  }
+  
+  .modalContainer .title {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+    
+  }
+
+    .titleCloseBtn {
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: 1px solid #D5D5D5;
+    }
+    
+    .titleCloseBtn button {
+      padding: 1%;
+      width: 10%;
+      background-color: transparent;
+      border: none;
+      font-size: 25px;
+      cursor: pointer;
+    }
+    
+    .search{
+      background-color: transparent;
+      width: 10%;
+      height: 10%;
+      position: fixed;
+      top: 11%;
+      left: 41%;
+    }
+
+  
+  .modalContainer .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+
+    .img{
+        margin: 20px 130px;
+    }
+
+    .name, .email{
+      text-align: center;
+    }
+
+    .name{
+      font-size: 1.85rem;
+    }
+
+    .add{
+      background-color: blue;
+      color: white;
+      margin: 20px 150px;
+      width: 30%;
+      letter-spacing: .1rem;
+    }
+
