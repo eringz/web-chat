@@ -24,6 +24,21 @@
     background-color: #D5D5D5;
 }
 
+.input{
+    margin:10px;
+    width: 95%;
+    font-size: 1rem;
+}
+    .search{
+        background-color: transparent;
+        width: 10%;
+        /* height: 5%; */
+        position: relative;
+        top: -50px;
+        left: 80%;
+        
+    }
+
     .img{
         width: 18%;
         border-radius: 200px;

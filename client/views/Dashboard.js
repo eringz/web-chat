@@ -16,6 +16,7 @@ import Notification from './Notification';
  */
 
 function Dashboard(){
+    const id = localStorage.getItem('id');
     const firstName = localStorage.getItem('firstName');
     const lastName = localStorage.getItem('lastName');
     const email = localStorage.getItem('email');
@@ -33,11 +34,9 @@ function Dashboard(){
         navigate('/')
     }
 
-    console.log(count);
-
     let display;
     if(count === 2){
-        display = <Contact />;
+        display = <Contact senderId={id} />;
     }
     else if(count === 3 )
     {

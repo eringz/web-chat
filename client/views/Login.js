@@ -22,6 +22,7 @@ function Login() {
                 console.log('ok',response.data);
                 makeToast('success', response.data.message)
                 localStorage.setItem('CC_token', response.data.token);
+                localStorage.setItem('id', response.data.id);
                 localStorage.setItem('firstName', response.data.firstName);
                 localStorage.setItem('lastN ame', response.data.lastName);
                 localStorage.setItem('email', response.data.email);

@@ -45,15 +45,40 @@ exports.login = async (req, res) => {
     });
     
     if(!user) throw `Email and Password did not match`;
+    const id = user.id;
     const firstName = user.firstName;
     const lastName = user.lastName;
 
     res.json({
         message: `User ${user.firstName} logged in successfully`,
+        id,
         firstName,
         lastName,
         email
     })
 
+}
+
+exports.search = async (req, res) => {
+    const {email} = req.body;
+
+    if(!email) throw `Email Address is required`;
+
+    const user = await User.findOne({
+        email
+    });
+    
+    if(!user) throw `User not foundd`;
+    const id = user.id;
+    const firstName = user.firstName;
+    const lastName = user.lastName;
+
+    res.json({
+        message: `User ${user.firstName} find`,
+        id,
+        firstName,
+        lastName,
+        email
+    })
 }
 
