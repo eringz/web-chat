@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 
-const contactRequestSchemae = new mongoose.Schema({
-    senderId:
+const contactRequestSchema = new mongoose.Schema({
+    receiverId:
     {
         type: String
     },
-    receiverId:
+    senderId:
     {
         type: String
     }
 }, 
 {
     timestamps: true
-})
+});
+
+module.exports = mongoose.model('ContactRequest', contactRequestSchema);

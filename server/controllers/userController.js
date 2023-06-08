@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const User = require('../models/User'); 
+const ContactRequest = require('../models/ContactRequest')
 const sha256 = require('js-sha256'); 
 
 //Handling signup method
@@ -35,7 +36,6 @@ exports.signup = async (req, res) => {
 //Handling login method.
 exports.login = async (req, res) => {
     const {email, password} = req.body;
-
     if(!email) throw `Email Address is required`;
     if(!password) throw `Password is required`;
 
@@ -59,6 +59,7 @@ exports.login = async (req, res) => {
 
 }
 
+//Handling a search function of an existing user for a contact request.
 exports.search = async (req, res) => {
     const {email} = req.body;
 
@@ -81,4 +82,32 @@ exports.search = async (req, res) => {
         email
     })
 }
+
+// Handling Contact request function to receiver user by a sender user and save.
+exports.crequest =  async (req, res) => {
+    const {receiverId, senderId} = req.body;
+
+    console.log(receiverId);
+    const contactRequestExists = await ContactRequest.findOne({
+        receiverId,
+        senderId
+    })
+
+    const contactRequest = new ContactRequest({
+        receiverId,
+        senderId
+    });
+
+    if(contactRequestExists) throw `Contact Request is already exist.`
+
+    await contactRequest.save();
+
+    res.json({
+        message: `Contact request has been process. Kindly wait for confirmation. Thank you.`
+    });
+
+}
+
+
+
 

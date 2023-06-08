@@ -9,8 +9,10 @@ app.use(cors());
 
 
 //Invoke routes
-app.use('/user', require('./routes/user'))
-app.use('/chatroom', require('./routes/chatroom'))
+app.use('/user', require('./routes/user'));
+app.use('/notification',require('./routes/notification'));
+app.use('/chatroom', require('./routes/chatroom'));
+
 
 //Error Handler setup 
 const errorHandlers = require('./handlers/errorHandler');

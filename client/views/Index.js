@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-function Index(props) {
+function Index({socket}) {
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -12,7 +12,7 @@ function Index(props) {
         }
         else
         {
-            navigate('/dashboard')
+            navigate('/webchat');
         }
     }, [])
 

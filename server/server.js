@@ -14,9 +14,11 @@ mongoose.connect(process.env.DATABASE, {
 
 
 //Invoke models
-require('./models/User');
 // require('./models/Chatroom');
 // require('./models/Message');
+
+const User = require('./models/User');
+const Notification = require('./models/Notification');
 
 const app = require('./app');
 
@@ -33,16 +35,46 @@ const io = require('socket.io')(server,{
 
 
 io.on('connection', (socket) => {
-    console.log(`Connected user ID: ${socket.id}`)
-    socket.on('login_user', (res) => {
-        console.log(`Login User: ${res}`)
-    })
+    console.log(`Connected user ID: ${socket.id}`);
 
-    socket.on('logout_user', (res) => {
-        console.log(`Logout User: ${res}`)
+    socket.on('loginUser', (res) => {
+        console.log(`Login User: ${res}`)
+
     });
+
+    // socket.on('sendNotification', async (res) => {
+    //     console.log(`receiver id: ${res.receiverId}`);
+    //     console.log(`sender id: ${res.senderId}`);
+
+    //     const receiverId = res.receiverId;
+    //     const senderId = res.senderId;
+    //     const message = 'sent you a friend request';
+
+    //     const notification = await new Notification({
+    //         receiverId,
+    //         senderId,
+    //         message
+    //     })
+        
+    //     await notification.save();
+
+    //     const notifications = await Notification.find({"receiverId": receiverId});
+
+    //     console.log(notifications);
+    //     socket.broadcast.emit('receiveNotification', notification);
+        
+    // });
+
+    // socket.on('notifications', (res) => {
+    //     socket.emit('receiveNotifications', res);
+
+    // });
+
+    // socket.on('logout_user', (res) => {
+    //     console.log(`Logout User: ${res}`)
+    // });
 
     socket.on('disconnect', (res) => {
         console.log(`Disconnected user ${socket.id}` )
-    })
+    });
 });

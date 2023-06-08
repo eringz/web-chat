@@ -58,7 +58,6 @@ function SearchModal({setOpenModal , senderId}){
     const searchUser = (e) => {
         e.preventDefault();
 
-        
         const email = emailRef.current.value;
 
         if(email === localStorage.getItem('email'))
@@ -73,7 +72,7 @@ function SearchModal({setOpenModal , senderId}){
             senderId
         })
             .then((response) => {
-                console.log('ok', response.data);
+                // console.log('ok', response.data);
                 setSearchId(response.data.id);
                 setSearchFirstName(response.data.firstName);
                 setSearchLastName(response.data.lastName);

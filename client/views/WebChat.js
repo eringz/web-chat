@@ -1,9 +1,9 @@
-import  React from 'react'
+import  React, {useState, useEffect, useRef} from 'react'
 import style from '../assets/stylesheets/dashboard.module.css';
 import { FaFacebookMessenger,  } from "react-icons/fa";
 import { BsPeopleFill, BsFillBellFill } from "react-icons/bs";
 // import axios from 'axios';
-import { io } from 'socket.io-client';
+
 import pic from '../assets/img/ron.jpg';
 import { useNavigate } from "react-router-dom";
 import ChatHistory from './ChatHistory';
@@ -15,28 +15,37 @@ import Notification from './Notification';
  * @returns 
  */
 
-function Dashboard(){
+
+
+function WebChat({socket}){
+    
+    let shouldLog = useRef(true);
+    // const [isLogin, setIsLogin] = useState(true);
+
+    const [count, setCount] = React.useState(1);
+    const navigate = useNavigate();
     const id = localStorage.getItem('id');
+    console.log(id);
     const firstName = localStorage.getItem('firstName');
     const lastName = localStorage.getItem('lastName');
     const email = localStorage.getItem('email');
-    
-    const socket = io('http://localhost:8888');
-    socket.emit('login_user', email);
 
-    const navigate = useNavigate();
-    const [count, setCount] = React.useState(1);
+    socket.emit('loginUser', id);
 
-    
     const logoutUser = () => {
-        socket.emit('logout_user', email);
-        localStorage.clear();
-        navigate('/')
+            localStorage.clear();
+            navigate('/');
     }
+    
+    // if(!isLogin)
+    // {
+    //     // socket.emit('logout_user', email);
+    // }
 
+    //Handling click event handlers
     let display;
     if(count === 2){
-        display = <Contact senderId={id} />;
+        display = <Contact socket={} senderId={id} />;
     }
     else if(count === 3 )
     {
@@ -76,4 +85,4 @@ function Dashboard(){
 
 }
 
-export default Dashboard;
+export default WebChat;
