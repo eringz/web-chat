@@ -19,6 +19,7 @@ mongoose.connect(process.env.DATABASE, {
 
 const User = require('./models/User');
 const Notification = require('./models/Notification');
+const ContactRequest = require('./models/ContactRequest');
 
 const app = require('./app');
 
@@ -42,37 +43,68 @@ io.on('connection', (socket) => {
 
     });
 
-    // socket.on('sendNotification', async (res) => {
-    //     console.log(`receiver id: ${res.receiverId}`);
-    //     console.log(`sender id: ${res.senderId}`);
-
-    //     const receiverId = res.receiverId;
-    //     const senderId = res.senderId;
-    //     const message = 'sent you a friend request';
-
-    //     const notification = await new Notification({
-    //         receiverId,
-    //         senderId,
-    //         message
-    //     })
+    socket.on('sendContactRequest', async (res) => {
+        const receiverId = res.receiverId;
+        const senderId = res.senderId;
+        const action = res.action;
+        console.log('rec', receiverId);
+        console.log('send', senderId);
         
-    //     await notification.save();
+        const contactRequestExists = await ContactRequest.findOne({
+            "receiver": receiverId,
+            "sender": senderId
+        })
 
-    //     const notifications = await Notification.find({"receiverId": receiverId});
 
-    //     console.log(notifications);
-    //     socket.broadcast.emit('receiveNotification', notification);
+        if(contactRequestExists === null)
+        {
+
+            const contactRequest = await new ContactRequest({
+                "receiver": receiverId,
+                "sender": senderId
+            });
+            await contactRequest.save();
+            await socket.emit('message', {contacRequestId: contactRequestExists.id, message: 'The contact request has been save.'});
+        }
+        else
+        {
+            console.log('Contact Request is already existed');
+            socket.emit('message', {contacRequestId: contactRequestExists.id, message: 'Contact Request is already existed'})
+        }
         
-    // });
+    });
 
-    // socket.on('notifications', (res) => {
-    //     socket.emit('receiveNotifications', res);
+    socket.on('', async (res) => {
 
-    // });
 
-    // socket.on('logout_user', (res) => {
-    //     console.log(`Logout User: ${res}`)
-    // });
+        const notificationExist = await Notification.findOne({
+            "contactRequest": contactRequestId
+        });
+
+        if(notificationExist)
+        {
+            await socket.emit('message', {message: 'Contact Request is already existed'}); 
+        }
+        else
+        {
+            const notification = new Notification({
+                "message": action,
+                "contactRequest": contactRequestId
+            })
+            
+            notification.save();
+            console.log('notif success');
+        }
+
+        const notificationRequestId = await notificationExist.id
+    });
+
+    
+
+
+    socket.on('logoutUser', (res) => {
+        console.log(`Logout User: ${res}`)
+    });
 
     socket.on('disconnect', (res) => {
         console.log(`Disconnected user ${socket.id}` )

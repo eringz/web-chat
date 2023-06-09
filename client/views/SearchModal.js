@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BsSearch } from "react-icons/bs";
 import { AiFillCloseCircle } from "react-icons/ai";
@@ -45,7 +45,7 @@ const SEARCH_STYLES = {
     left: '85%',
 }
 
-function SearchModal({setOpenModal , senderId}){
+function SearchModal({socket, setOpenModal , senderId}){
     const emailRef = React.createRef();
     const [searchId, setSearchId] = useState('');
     const [searchFirstName, setSearchFirstName] = useState('');
@@ -53,7 +53,10 @@ function SearchModal({setOpenModal , senderId}){
     const [searchEmail, setSearchEmail] = useState('');
     const [isUser, setIsUser] = useState(false);
 
-    console.log('sender email', localStorage.getItem('email'));
+    useEffect(() => {
+        console.log('sender email', localStorage.getItem('email'));
+    }, [socket]);
+    
 
     const searchUser = (e) => {
         e.preventDefault();
@@ -72,7 +75,6 @@ function SearchModal({setOpenModal , senderId}){
             senderId
         })
             .then((response) => {
-                // console.log('ok', response.data);
                 setSearchId(response.data.id);
                 setSearchFirstName(response.data.firstName);
                 setSearchLastName(response.data.lastName);
@@ -111,6 +113,7 @@ function SearchModal({setOpenModal , senderId}){
                 </div>
             </div>
             {isUser && <SearchUserModal 
+                socket={socket}
                 setIsUser={setIsUser} 
                 searchId={searchId}
                 searchFirstName={searchFirstName}

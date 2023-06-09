@@ -1,30 +1,32 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from 'axios';
-
 import contactModalStyle from "../assets/stylesheets/contactModal.module.css";
 import friendImg from '../assets/img/ron.jpg'
 import { AiFillCloseCircle } from "react-icons/ai";
 import makeToast from "../Toaster";
-import io from 'socket.io-client'
 
-const socket = io('http://localhost:8888');
 
-function SearchUserModal({ setIsUser, searchId, searchFirstName, searchLastName, searchEmail, senderId }) {
+function SearchUserModal({socket, setIsUser, searchId, searchFirstName, searchLastName, searchEmail, senderId }) {
   const receiverId = searchId;
+
+  const [contactRequestId, setContactRequestId] = useState('');
+
   const submitHandler = () => {
-    axios.post('http://localhost:8888/user/crequest', {
-      receiverId,
-      senderId
-    })
-      .then((response) => {
-        makeToast('success', response.data.message);
-        socket.emit('sendNotification', {receiverId: receiverId, senderId: senderId});
-        setIsUser(false);
-      })
-      .catch((err) => {
-        makeToast('error', err.response.data.message);
-      })
+    socket.emit('sendContactRequest', {receiverId: receiverId, senderId: senderId, action: 'sent you a friend request'})
   }
+
+  useEffect(() =>{
+    socket.on('message', (res) => {
+      console.log(res);
+      makeToast('info', res.message);
+      setContactRequestId(res.contacRequestId);
+    });
+
+    socket.emit('addNotification', {contactRequest: contactRequestId ,action: 'sent you a friend request'})
+  }, [socket])
+  
+
+  
   return (
     <div className={ contactModalStyle.modalBackground}>
       <div className={contactModalStyle.modalContainer}>

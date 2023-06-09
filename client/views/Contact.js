@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import contactStyle from '../assets/stylesheets/contact.module.css';
 import SearchModal from './SearchModal';
 import { GrAdd } from "react-icons/gr";
 import friendPhoto from  '../assets/img/ron.jpg';
 
-function Contact({senderId}) {
+function Contact({socket, senderId}) {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -19,10 +18,9 @@ function Contact({senderId}) {
         <img className={contactStyle.img} src={friendPhoto} alt='friend'></img>
         <p className={contactStyle.friend}>John Ronald Santos Friend</p>
       </div>
-      {modalOpen && <SearchModal setOpenModal={setModalOpen} senderId={senderId}  />}
+      {modalOpen && <SearchModal socket={socket} setOpenModal={setModalOpen} senderId={senderId}  />}
     </>
   )
-    
 }
 
 export default Contact

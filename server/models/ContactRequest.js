@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 
 const contactRequestSchema = new mongoose.Schema({
-    receiverId:
+    receiver:
     {
-        type: String
+        type: String,
+        // ref: 'User',
+        // required: true
     },
-    senderId:
+    sender:
     {
-        type: String
+        type: String,
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: 'User',
+        // required: true
     }
 }, 
 {

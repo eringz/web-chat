@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import notificationStyle from '../assets/stylesheets/notificationStyle.module.css';
 import friendRequestPhoto from '../assets/img/ron.jpg'
-import axios from 'axios';
-import io from 'socket.io-client';
-import makeToast from '../Toaster';
+// import axios from 'axios';
+// import makeToast from '../Toaster';
 
-function Notification({id}) {
-  const socket = io('http://localhost:8888');
-  const [notificationList, setNotificationList] = useState([]);
-  const receiverId = id;
-  console.log(receiverId);
+function Notification({socket, id}) {
+  // const [notificationList, setNotificationList] = useState([]);
+  
   let shouldLog = useRef(true);
 
-  socket.on('receiveNotification', (res) => {
-    console.log(res);
-    
-  });
+  useEffect(() => {
+    const receiverId = id;
+    console.log('notification page', receiverId);
+    socket.on('receiveNotification', (res) => {
+      console.log('receive ', res);
+    });
+  }, [socket])
+  
+  
 
 
 

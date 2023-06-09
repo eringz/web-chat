@@ -88,17 +88,18 @@ exports.crequest =  async (req, res) => {
     const {receiverId, senderId} = req.body;
 
     console.log(receiverId);
-    const contactRequestExists = await ContactRequest.findOne({
-        receiverId,
-        senderId
+    const contactRequestExists = await ContactRequest.find({
+        "receiver": receiverId,
+        "sender": senderId
     })
+
+    if(contactRequestExists) throw `Contact Request is already exist.`
 
     const contactRequest = new ContactRequest({
         receiverId,
         senderId
     });
 
-    if(contactRequestExists) throw `Contact Request is already exist.`
 
     await contactRequest.save();
 
