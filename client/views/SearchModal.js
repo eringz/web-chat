@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { BsSearch } from "react-icons/bs";
 import { AiFillCloseCircle } from "react-icons/ai";
@@ -47,54 +47,37 @@ const SEARCH_STYLES = {
 
 function SearchModal({socket, setOpenModal , senderId}){
     const emailRef = React.createRef();
-    const [searchId, setSearchId] = useState('');
-    const [searchFirstName, setSearchFirstName] = useState('');
-    const [searchLastName, setSearchLastName ] = useState('');
-    const [searchEmail, setSearchEmail] = useState('');
     const [isUser, setIsUser] = useState(false);
+    const [user, setUser] = useState({});
+    let shouldLog = useRef(true);
 
-    useEffect(() => {
-        console.log('sender email', localStorage.getItem('email'));
-    }, [socket]);
-    
-
-    const searchUser = (e) => {
-        e.preventDefault();
-
+    const searchUser = () => {
         const email = emailRef.current.value;
-
-        if(email === localStorage.getItem('email'))
+        if(shouldLog)
         {
-            makeToast('error', 'This request is invalid. Please try another email');
-            setIsUser(false);
+            shouldLog = false;
+            (email !== localStorage.getItem('email')) ? (socket.emit('searchUser', {email: email, senderId: senderId})) : makeToast('error', 'You can not add your own self'); 
         }
-        else
-        {
-            axios.post('http://localhost:8888/user/search', {
-            email,
-            senderId
-        })
-            .then((response) => {
-                setSearchId(response.data.id);
-                setSearchFirstName(response.data.firstName);
-                setSearchLastName(response.data.lastName);
-                setSearchEmail(response.data.email);
-                setIsUser(true);
-            })
-            .catch((err) => {
-                if(err &&
-                    err.response &&
-                    err.response.data &&
-                    err.response.data.messsage   
-                )
-                {
-                    makeToast('error', err.response.data.message);
-                }
-            })
-        }
+        // socket.emit('searchContactRequest', {receiverId: user._id, senderId: senderId});
+    }
+    
+    useEffect(() => {
+        socket.on('searchedUser', (res) => {
+            if(res.user !== null)
+            {
+                makeToast('success', `You searched ${res.user.firstName}`);
+                setUser(res.user);
+                setIsUser(true)
 
-        
-  }
+            }
+            else
+            {
+                makeToast('error', `Email is invalid`);
+                setIsUser(false);
+            } 
+        });
+    }, [socket]);
+
     return (
         <>
             <div style={DIV_STYLES}>
@@ -114,15 +97,11 @@ function SearchModal({socket, setOpenModal , senderId}){
             </div>
             {isUser && <SearchUserModal 
                 socket={socket}
+                user={user}
+                senderId={senderId}
                 setIsUser={setIsUser} 
-                searchId={searchId}
-                searchFirstName={searchFirstName}
-                searchLastName={searchLastName}
-                searchEmail={searchEmail}   
-                senderId={senderId} 
             />}
         </>
-        
     )
 }
 

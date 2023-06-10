@@ -49,12 +49,12 @@
     text-align: center;
   }
 
-    .img{
+    .img {
         margin: 20px 130px;
         border-radius: 100%;
     }
 
-    .name, .email{
+    .name, .email {
       text-align: center;
     }
 
@@ -62,11 +62,18 @@
       font-size: 1.85rem;
     }
 
-    .add{
-      background-color: blue;
+    .add, .cancel {
       color: white;
       margin: 20px 150px;
       width: 30%;
       letter-spacing: .1rem;
+    }
+
+    .add {
+      background-color: blue;
+    }
+    
+    .cancel {
+      background-color: #4A0000;
     }
 

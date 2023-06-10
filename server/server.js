@@ -23,6 +23,7 @@ const ContactRequest = require('./models/ContactRequest');
 
 const app = require('./app');
 
+
 const server = app.listen(8888, () => {
     console.log('Running in localhost on port 8888');
 });
@@ -43,60 +44,104 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on('sendContactRequest', async (res) => {
-        const receiverId = res.receiverId;
-        const senderId = res.senderId;
-        const action = res.action;
-        console.log('rec', receiverId);
-        console.log('send', senderId);
+    
+    socket.on('searchUser', async (data) => {
+        const [searchEmail, senderId] = [data.email, data.senderId];
         
-        const contactRequestExists = await ContactRequest.findOne({
+        const user = await User.findOne(
+            {
+                "email": searchEmail
+            },
+            {
+                id: 1,
+                firstName: 1,
+                lastName: 1,
+                email: 1
+            }
+        );
+
+        if(user)
+        {
+
+            console.log(user);  
+            socket.emit('searchedUser', {user: user,});
+        }
+        
+
+    });
+
+    // socket.on('searchContactRequest', async (data) => {
+    //     console.log(data);
+    //     const contactRequestPending = await ContactRequest.findOne({
+    //         'recieverId': data.receiverId,
+    //         'senderId': data.senderId
+    //     },
+    //     {
+    //         isPending: 1
+    //     });
+
+    //     console.log(contactRequestPending);
+    //     socket.emit('searchedContactRequest', {contactRequestPending: contactRequestPending})
+    // });
+
+    
+
+    let start = new Date().getTime();
+    /*
+        * SERVER LISTEN TO EVENT 'sendContactRequest' FROM A CLIENT WITH DATA AND STORE IT IN CORRESPONDING VARIABLES
+        * SETUP A CONDITION OF contactRequestExists.
+        * SERVER EMITS AN EVENT CALLED message.
+    */
+    socket.on('sendContactRequest', async (data) => {
+        const [receiverId, senderId, action] = [
+            data.receiverId, data.senderId, data.action
+        ];
+
+        const contactRequestPending = await ContactRequest.findOne({
+            'recieverId': data.receiverId,
+            'senderId': data.senderId
+        },
+        {
+            isPending: 1
+        });
+
+        console.log(contactRequestPending);
+        const contactRequest = new ContactRequest({
             "receiver": receiverId,
-            "sender": senderId
+            "sender": senderId,
+        });
+
+        contactRequest.save();
+
+        const notification = new Notification({
+            "message": action,
+            "contactRequest": contactRequest.id
         })
-
-
-        if(contactRequestExists === null)
-        {
-
-            const contactRequest = await new ContactRequest({
-                "receiver": receiverId,
-                "sender": senderId
-            });
-            await contactRequest.save();
-            await socket.emit('message', {contacRequestId: contactRequestExists.id, message: 'The contact request has been save.'});
-        }
-        else
-        {
-            console.log('Contact Request is already existed');
-            socket.emit('message', {contacRequestId: contactRequestExists.id, message: 'Contact Request is already existed'})
-        }
+        notification.save();
+            
+        socket.emit('contactRequestMessage', {message: 'You send a contact request'});
         
     });
 
-    socket.on('', async (res) => {
+    let end = new Date().getTime();
+    let time = end - start;
+    console.log(`time taken: ${time}ms`);
 
+    socket.on('cancelContactRequest', async (res) => {
+        const [receiverId, senderId] = [
+            data.receiverId, data.senderId
+        ];
 
-        const notificationExist = await Notification.findOne({
-            "contactRequest": contactRequestId
-        });
+        const contactRequestExists = await  ContactRequest.findOne({
+            "receiver": receiverId,
+            "sender": senderId
+            },
+            {
+                _id: 1
+            }
+        )
+        console.log(contactRequestExists);
 
-        if(notificationExist)
-        {
-            await socket.emit('message', {message: 'Contact Request is already existed'}); 
-        }
-        else
-        {
-            const notification = new Notification({
-                "message": action,
-                "contactRequest": contactRequestId
-            })
-            
-            notification.save();
-            console.log('notif success');
-        }
-
-        const notificationRequestId = await notificationExist.id
     });
 
     

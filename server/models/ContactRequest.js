@@ -13,6 +13,11 @@ const contactRequestSchema = new mongoose.Schema({
         // type: mongoose.Schema.Types.ObjectId,
         // ref: 'User',
         // required: true
+    },
+    isPending:
+    {
+        type: Boolean,
+        default: true
     }
 }, 
 {
