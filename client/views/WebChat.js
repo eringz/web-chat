@@ -1,4 +1,4 @@
-import  React, {useState, useEffect, useRef} from 'react'
+import  React, { useEffect, useContext, useReducer,  useRef} from 'react'
 import style from '../assets/stylesheets/dashboard.module.css';
 import { FaFacebookMessenger,  } from "react-icons/fa";
 import { BsPeopleFill, BsFillBellFill } from "react-icons/bs";
@@ -7,24 +7,62 @@ import { useNavigate } from "react-router-dom";
 import ChatHistory from './ChatHistory';
 import Contact from './Contact';
 import Notification from './Notification';
+import {SocketContext} from '../App';
 
-function WebChat({socket}){
+
+
+export const UserContext = React.createContext();
+
+const initialState = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+}
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case 'USER' : 
+            return {
+                id: action.id,
+                firstName: action.firstName,
+                lastName: action.lastName,
+                email: action.email
+            }
+        default:
+            return state;
+    }
+}
+
+function WebChat(){
+
+    const socket = useContext(SocketContext);
     
     let shouldLog = useRef(true);
-    // const [isLogin, setIsLogin] = useState(true);
-
     const [count, setCount] = React.useState(1);
     const navigate = useNavigate();
     const id = localStorage.getItem('id');
-    const firstName = localStorage.getItem('firstName');
-    const lastName = localStorage.getItem('lastName');
-    const email = localStorage.getItem('email');
-    
-    useEffect(() => {
-        console.log('webchat page',id);
-        socket.emit('loginUser', id);
+
+    useEffect(()=> {
+        socket.emit('searchUser', id);
     }, [socket]);
     
+    
+    const [user, dispatch] = useReducer(reducer, initialState);
+    useEffect(() => {
+        socket.on('user', (res) => {
+            // console.log(res.user._id);
+            dispatch({ 
+                type: "USER", 
+                id: res.user._id,
+                firstName: res.user.firstName, 
+                lastName: res.user.lastName,
+                email:  res.user.email
+            });
+        });
+    }, [socket]);
+    
+    console.log(`React User: ${user.id}`);
 
     const logoutUser = () => {
             localStorage.clear();
@@ -32,23 +70,18 @@ function WebChat({socket}){
             navigate('/');
     }
     
-    // if(!isLogin)
-    // {
-    //     // socket.emit('logout_user', email);
-    // }
-
     //Handling click event handlers
     let display;
     if(count === 2){
-        display = <Contact socket={socket} senderId={id} />;
+        display = <Contact />;
     }
     else if(count === 3 )
     {
-        display = <Notification socket={socket} id={id} />;
+        display = <Notification />;
     }
     else
     {
-        display = <ChatHistory socket={socket} />; 
+        display = <ChatHistory />; 
     }
 
     return (
@@ -59,20 +92,23 @@ function WebChat({socket}){
                     <button onClick={() => {setCount(2)} } className={style.navButton}><BsPeopleFill size="40" /></button>
                     <button onClick={() => {setCount(3)} } className={style.navButton}><BsFillBellFill size="40" /></button>
                 </div>
-                <div className={style.nav2}>
-                    {display}
-                </div>
+                <UserContext.Provider value={user}>
+                    <div className={style.nav2}>
+                        {display}
+                    </div>
+                </UserContext.Provider>
                 <div className={style.chat}>
                     <div className={style.chatHeader}></div>
                     <div className={style.chatBody}><i class="fas fa-band-aid"></i></div>
                 </div>
                 <div className={style.account}>
                     <div className={style.accountHead}>
-                        <img id={style.profilePic} src={pic} alt='profile'></img>
+                        <img id={style.profilePic} src={pic} alt='profile' />
                         <span className={style.logout} onClick={logoutUser}>Log out</span>
                     </div>
-                    <p>Name: {firstName} {lastName}</p>
-                    <p>Email: {email}</p>
+                    <p>id: {user.id}</p>
+                    <p>Name: {user.firstName} {user.lastName}</p>
+                    <p>Email: {user.email}</p>
                 </div>
             </div>
         </> 

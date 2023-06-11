@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const notificationSchema = require('./Notification');
+
 
 const userSchema = new mongoose.Schema({
     firstName: 
@@ -21,10 +23,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: 'Password is required'
     },
-    friends: 
-    {
-        type: Array,
-    }
+    contacts: Array,
+    contactRequests: Array,
+    notifications: Array,
 },
 {
     timestamps: true

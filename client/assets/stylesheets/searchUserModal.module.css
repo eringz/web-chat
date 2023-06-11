@@ -1,0 +1,79 @@
+.modalBackground {
+  /* background-color: rgba(200, 200, 200);
+  background-color: transparent; */
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 10%;
+  left: 8%;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+}
+  
+  .modalContainer {
+    width: 500px;
+    height: 500px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    position: absolute;
+    top: 15%;
+    left: 12%;
+    flex-direction: column;
+    padding: 25px;
+  }
+
+    .titleCloseBtn {
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: 1px solid #D5D5D5;
+    }
+    
+    .titleCloseBtn button {
+      padding: 1%;
+      width: 10%;
+      background-color: transparent;
+      border: none;
+      font-size: 25px;
+      cursor: pointer;
+    }
+    
+  .modalContainer .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+
+    .img {
+        margin: 20px 130px;
+        border-radius: 100%;
+    }
+
+    .name, .email {
+      text-align: center;
+    }
+
+    .name{
+      font-size: 1.85rem;
+    }
+
+    .add, .cancel {
+      color: white;
+      margin: 20px 150px;
+      width: 30%;
+      letter-spacing: .1rem;
+    }
+
+    .add {
+      background-color: blue;
+    }
+    
+    .cancel {
+      background-color: #4A0000;
+    }
+

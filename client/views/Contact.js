@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import contactStyle from '../assets/stylesheets/contact.module.css';
 import SearchModal from './SearchModal';
 import { GrAdd } from "react-icons/gr";
 import friendPhoto from  '../assets/img/ron.jpg';
+import {UserContext} from './WebChat';
 
-function Contact({socket, senderId}) {
+function Contact() {
+
+  // const user = useContext(UserContext);
+
+  // console.log('contact user', user);
+
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -18,7 +24,7 @@ function Contact({socket, senderId}) {
         <img className={contactStyle.img} src={friendPhoto} alt='friend'></img>
         <p className={contactStyle.friend}>John Ronald Santos Friend</p>
       </div>
-      {modalOpen && <SearchModal socket={socket} setOpenModal={setModalOpen} senderId={senderId}  />}
+      {modalOpen && <SearchModal setOpenModal={setModalOpen} />}
     </>
   )
 }

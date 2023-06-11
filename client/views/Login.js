@@ -20,11 +20,8 @@ function Login() {
         })
             .then((response) => {
                 makeToast('success', response.data.message)
-                localStorage.setItem('CC_token', response.data.token);
+                // localStorage.setItem('CC_token', response.data.token);
                 localStorage.setItem('id', response.data.id);
-                localStorage.setItem('firstName', response.data.firstName);
-                localStorage.setItem('lastN ame', response.data.lastName);
-                localStorage.setItem('email', response.data.email);
                 navigate('/webchat');
             })
             .catch((err) => {
@@ -39,10 +36,8 @@ function Login() {
     
     return (
         <div className='card'>
-            {/* <div className='cardHeader'>Login</div> */}
             <div className='cardBody'>
                 <div className='inputGroup'>
-                    {/* <label htmlFor='email'>Email</label> */}
                     <input 
                         type='email' 
                         name='email' 

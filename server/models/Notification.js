@@ -5,13 +5,6 @@ const notificationSchema = new mongoose.Schema({
     {
         type: String
     },
-    contactRequest:
-    {
-        type: String
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: 'ContactRequest',
-        // required: true
-    }
 },
 {
     timestamps: true

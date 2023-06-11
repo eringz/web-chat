@@ -4,18 +4,18 @@ import friendRequestPhoto from '../assets/img/ron.jpg'
 // import axios from 'axios';
 // import makeToast from '../Toaster';
 
-function Notification({socket, id}) {
+function Notification({id}) {
   // const [notificationList, setNotificationList] = useState([]);
   
   let shouldLog = useRef(true);
 
-  useEffect(() => {
-    const receiverId = id;
-    console.log('notification page', receiverId);
-    socket.on('receiveNotification', (res) => {
-      console.log('receive ', res);
-    });
-  }, [socket])
+  // useEffect(() => {
+  //   const receiverId = id;
+  //   console.log('notification page', receiverId);
+  //   socket.on('receiveNotification', (res) => {
+  //     console.log('receive ', res);
+  //   });
+  // }, [socket])
 
 
   
