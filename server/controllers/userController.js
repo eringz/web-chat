@@ -1,14 +1,24 @@
-const mongoose = require('mongoose');
-
-const User = require('../models/User'); 
-const ContactRequest = require('../models/ContactRequest')
+// const ContactRequest = require('../models/ContactRequest');
+const User = require('../models/User');
 const sha256 = require('js-sha256'); 
 
 //Handling signup method
+// exports.signup = upload.single('image'), async (req, res) => {
 exports.signup = async (req, res) => {
-    const {firstName, lastName, email, password} = req.body;
+    const {firstName, lastName, email, password, image} = req.body;
+    // const url = req.protocol + '://' + req.get('host');
 
-    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com/;
+    // console.log('url', url);
+    console.log(firstName);
+    console.log(req.body);
+    // let obj = {
+    //     img: {
+    //         data: fs.readFileSync(path.join('uploads/' + req.file.fileName)),
+    //         contentType: 'image/png'
+    //     }
+    // }
+    
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@asg.com/;
     
     if(!emailRegex.test(email)) throw `Email is invalid.`;
     if(password.length < 8) throw `Password must contain at least 8 characters long.`;
@@ -23,7 +33,8 @@ exports.signup = async (req, res) => {
         firstName, 
         lastName, 
         email, 
-        password: sha256(password + process.env.SALT)
+        password: sha256(password + process.env.SALT),
+        // img: obj
     });
 
     await user.save();

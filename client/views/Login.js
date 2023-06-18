@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {SocketContext} from '../App';
 import axios from 'axios';
 import makeToast from '../Toaster'
+import { Socket } from 'socket.io-client';
 
 
 function Login() {
+    const socket = useContext(SocketContext);
     const emailRef = React.createRef();
     const passwordRef = React.createRef();
     const navigate = useNavigate()
@@ -14,25 +17,36 @@ function Login() {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-        axios.post('http://localhost:8888/user/login', {
-            email,
-            password    
-        })
-            .then((response) => {
-                makeToast('success', response.data.message)
-                // localStorage.setItem('CC_token', response.data.token);
-                localStorage.setItem('id', response.data.id);
-                navigate('/webchat');
-            })
-            .catch((err) => {
-                if(err && 
-                    err.response && 
-                    err.response.data && 
-                    err.response.data.message
-                )
-                    makeToast('error', err.response.data.message);
-            });
+        socket.emit('loginUser', {email: email, password: password});
+
+        // axios.post('http://localhost:8888/user/login', {
+        //     email,
+        //     password    
+        // })
+        //     .then((response) => {
+        //         makeToast('success', response.data.message)
+        //         // localStorage.setItem('CC_token', response.data.token);
+        //         localStorage.setItem('id', response.data.id);
+        //         navigate('/webchat');
+        //     })
+        //     .catch((err) => {
+        //         if(err && 
+        //             err.response && 
+        //             err.response.data && 
+        //             err.response.data.message
+        //         )
+        //             makeToast('error', err.response.data.message);
+        //     });
+
     }
+
+    useEffect(() =>{
+        socket.on('logUser', (res) => {
+            makeToast('success', res.message);
+            localStorage.setItem('id', res.user._id);
+            navigate('/webchat');
+        });
+    }, [socket]);
     
     return (
         <div className='card'>

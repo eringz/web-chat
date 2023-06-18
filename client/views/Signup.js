@@ -1,29 +1,52 @@
-import React from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import makeToast from '../Toaster'
+import {SocketContext} from '../App';
+import {UserContext} from './WebChat';
+import makeToast from '../Toaster';
 
-function Signup(props) {
+
+function Signup() {
+    const socket = useContext(SocketContext);
     const firstNameRef = React.createRef();
     const lastNameRef = React.createRef();
     const emailRef = React.createRef();
     const passwordRef = React.createRef();
+    const imgRef = React.createRef();
     const navigate = useNavigate()
+    const [image, setImage] = useState('')
     
-    const signupUser = (e) => {
+    // const fileSelectedHandler = (e) => {
+    //     console.log('fsfsd');
+    //     let file = e.target.files[0].name;
+    //     setImage({
+    //         selectedFile: e.target.files[0],
+    //         filename: document.getElementById('file').value
+    //     })
+    //     console.log(file);
+    // }
+
+    const registerHandler = (e) => {
         e.preventDefault()
         const firstName = firstNameRef.current.value;
         const lastName = lastNameRef.current.value;
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         
-        // this.props.history.push('/login')
+        // socket.emit('registerUser', {
+        //     firstName: firstName,
+        //     lastName: lastName,
+        //     email: email,
+        //     password: password 
+        // });
+        // console.log(image.name);
         
         axios.post('http://localhost:8888/user/signup', {
             firstName,
             lastName,
             email,
-            password    
+            password,
+            // image
         })
             .then((response) => {
                 console.log('ok',response.data.message);
@@ -36,9 +59,16 @@ function Signup(props) {
             });
     }
 
+    // useEffect(() => {
+    //     socket.on('registeredUser', (res) => {
+    //         console.log(res);
+    //         makeToast('info', res.message);
+    //         navigate('/login');
+    //     });
+    // }, [socket]);
+
     return (
-        <div className='card'>
-            {/* <div className='cardHeader'>{JSON.stringify(firstNameRef)}</div> */}
+        <form encType="multipart/form-data" onSubmit={registerHandler} className='card'>
             <div className='cardBody'>
                 <div className='inputGroup'>
                     <input 
@@ -76,10 +106,21 @@ function Signup(props) {
                         ref={passwordRef} 
                     />
                 </div>
-                <button onClick={signupUser} className='signup-button'>Sign up</button>
+                <div className='inputGroup'>
+                    <input 
+                        type='file' 
+                        name='image' 
+                        id='image' 
+                        accept='image/*'
+                        // onChange={fileSelectedHandler}
+                        onChange={(e) => {setImage(e.target.files[0])}}
+                        // ref={imgRef} 
+                    />
+                </div>
+                <button type="submit" className='signup-button'>Sign up</button>
                 <Link to='/login'>Log in</Link>
             </div>
-        </div>
+        </form>
     )
 }
 

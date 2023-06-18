@@ -23,8 +23,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: 'Password is required'
     },
-    contacts: Array,
-    contactRequests: Array,
+    img:
+    {
+        data: Buffer,
+        contentType: String,
+    },
+    contacts: Array, 
+    contactRequests: 
+    {
+        type: Array,
+    },
     notifications: Array,
 },
 {

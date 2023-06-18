@@ -51,9 +51,8 @@ function SearchModal({setOpenModal}){
         else
         {
             socket.emit('searchUserByEmail', {email: email, senderId: user.id});
-            setIsUser(true);
-        }  
             
+        }  
     }
     
     const [searchUser, dispatch] = useReducer(reducer, initialState);
@@ -62,10 +61,11 @@ function SearchModal({setOpenModal}){
             if(!res.user)
             {
                 makeToast('error', 'No user found');
+                setIsUser(false);
             }
             else
             {
-                console.log(res);
+                setIsUser(true);
                 dispatch({ 
                     type: "USER", 
                     id: res.user._id,
@@ -74,6 +74,7 @@ function SearchModal({setOpenModal}){
                     email:  res.user.email,
                     contactRequests: res.user.contactRequests
                 });
+                
             }
         });
     }, [socket]);
@@ -98,8 +99,6 @@ function SearchModal({setOpenModal}){
             {isUser && <SearchUserModal 
                 setIsUser={setIsUser} 
                 searchUser={searchUser}
-                // senderId={user.id}
-                // contactRequestPending={contactRequestPending}
             />}
         </>
     )

@@ -5,8 +5,8 @@ function Index({socket}) {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const email = localStorage.getItem('email');
-        if(!email)
+        const id = localStorage.getItem('id');
+        if(!id)
         {
             navigate('/login');
         }

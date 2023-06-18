@@ -1,4 +1,4 @@
-import  React, { useEffect, useContext, useReducer,  useRef} from 'react'
+import  React, { useEffect, useContext, useReducer, useState} from 'react'
 import style from '../assets/stylesheets/dashboard.module.css';
 import { FaFacebookMessenger,  } from "react-icons/fa";
 import { BsPeopleFill, BsFillBellFill } from "react-icons/bs";
@@ -10,7 +10,6 @@ import Notification from './Notification';
 import {SocketContext} from '../App';
 
 
-
 export const UserContext = React.createContext();
 
 const initialState = {
@@ -18,6 +17,7 @@ const initialState = {
     firstName: '',
     lastName: '',
     email: '',
+    constactRequests: []
 }
 
 const reducer = (state, action) => {
@@ -27,42 +27,41 @@ const reducer = (state, action) => {
                 id: action.id,
                 firstName: action.firstName,
                 lastName: action.lastName,
-                email: action.email
+                email: action.email,
+                contactRequests: action.contactRequests
             }
         default:
             return state;
     }
 }
-
+    
 function WebChat(){
-
     const socket = useContext(SocketContext);
     
-    let shouldLog = useRef(true);
-    const [count, setCount] = React.useState(1);
     const navigate = useNavigate();
-    const id = localStorage.getItem('id');
 
-    useEffect(()=> {
+    const id = localStorage.getItem('id');
+    console.log('id',id);
+
+    
+    useEffect((res) => {
         socket.emit('searchUser', id);
-    }, [socket]);
+    }, [socket])
+
+    const [u, dispatch] = useReducer(reducer, initialState);
     
-    
-    const [user, dispatch] = useReducer(reducer, initialState);
+
     useEffect(() => {
-        socket.on('user', (res) => {
-            // console.log(res.user._id);
-            dispatch({ 
-                type: "USER", 
+        socket.on('user', (res)=> {
+            dispatch({
+                type:"USER",
                 id: res.user._id,
-                firstName: res.user.firstName, 
+                firstName: res.user.firstName,
                 lastName: res.user.lastName,
-                email:  res.user.email
-            });
+                email: res.user.email
+            })
         });
     }, [socket]);
-    
-    console.log(`React User: ${user.id}`);
 
     const logoutUser = () => {
             localStorage.clear();
@@ -70,6 +69,7 @@ function WebChat(){
             navigate('/');
     }
     
+    const [count, setCount] = React.useState(1);
     //Handling click event handlers
     let display;
     if(count === 2){
@@ -92,7 +92,7 @@ function WebChat(){
                     <button onClick={() => {setCount(2)} } className={style.navButton}><BsPeopleFill size="40" /></button>
                     <button onClick={() => {setCount(3)} } className={style.navButton}><BsFillBellFill size="40" /></button>
                 </div>
-                <UserContext.Provider value={user}>
+                <UserContext.Provider value={u}>
                     <div className={style.nav2}>
                         {display}
                     </div>
@@ -106,9 +106,9 @@ function WebChat(){
                         <img id={style.profilePic} src={pic} alt='profile' />
                         <span className={style.logout} onClick={logoutUser}>Log out</span>
                     </div>
-                    <p>id: {user.id}</p>
-                    <p>Name: {user.firstName} {user.lastName}</p>
-                    <p>Email: {user.email}</p>
+                    <p>id: {u.id}</p>
+                    <p>Name: {u.firstName} {u.lastName}</p>
+                    <p>Email: {u.email}</p>
                 </div>
             </div>
         </> 

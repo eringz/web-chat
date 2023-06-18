@@ -6,41 +6,25 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import makeToast from "../Toaster";
 
 
-function SearchUserModal({searchUser, setIsUser}) {
+function SearchUserModal({searchUser, setIsUser, pending}) {
   const user = useContext(UserContext);
   const socket = useContext(SocketContext);
 
-  // let array = [];
-  // console.log(array.length);
-  const [pending, setPending] = useState(false);
-
-
-  // if(searchUser.contactRequests)
-  // {
-  //   console.log('falsedfsdf')
-  //   contactRequest = false
-  // }
-  // else
-  // {
-  //   console.log('teureoirue')
-  // }
-
   let display;
-  
-  
-
   /* 
     * CREATE submitHandler FUNCTION TO MAKE A CLIENT EMIT CALLED sendContactRequest.
   */
   const contactRequestHandler = () => {
     socket.emit('sendContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'sent you a friend request'});
-    setPending(true);
-    // setIsUser(false);
-  };
+    makeToast('info', `You make a contact request with ${searchUser.firstName}. Please wait for confirmation.`);
+    setIsUser(false);
+  }
 
   const cancelContactRequestHandler = () => {
-    alert('cancel');
-    setPending(false);
+    socket.emit('cancelContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'sent you a friend request'});
+    makeToast('info', `You cancel a contact request with ${searchUser.firstName}.`);
+    setIsUser(false);
+    
   }
 
   /*
@@ -48,42 +32,41 @@ function SearchUserModal({searchUser, setIsUser}) {
     * HANDLE MAKETOAST TO MAKE AN ALERT MESSAGE TO A USER THAT SENDS A CONTACT REQUEST.
   */
   useEffect(() =>{
-    
-  }, [socket]);
 
+  }, []);
 
-  if(pending)
+  const [isPending, setIsPending] = useState(false)
+  
+  if(searchUser.id !== '')
   {
-    display = <button onClick={cancelContactRequestHandler} className={contactModalStyle.cancel}>CANCEL</button> 
+    console.log('length', searchUser.contactRequests.length);
+
+    for(let i = 0; i < searchUser.contactRequests.length; i++)
+    {
+      if(searchUser.contactRequests[i] === user.id)
+      {
+        display = <button onClick={cancelContactRequestHandler} className={contactModalStyle.cancel}>CANCEL</button> 
+      }
+      else
+      {
+        display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button> 
+      }
+    }
   }
-  else
+  if(searchUser.contactRequests.length === 0 )
   {
-    display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button> 
+      console.log('fsdfsdffsd');
+      display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button> 
   }
-  // if(pending === false)
-  // {
-  // }
-  // else
-  // {
-  //   display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button> 
-  // }
-   
+
   return (
     <div className={ contactModalStyle.modalBackground}>
       <div className={contactModalStyle.modalContainer}>
-        <div className={contactModalStyle.titleCloseBtn}>
-          <button className={contactModalStyle.button}
-            onClick={() => {
-              setIsUser(false);
-            }}
-          >
-            <AiFillCloseCircle />
-          </button>
-        </div>
         <div className="body">
           <img className={contactModalStyle.img} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi3N0LBOCIWRLl7xqB5djlO0oL0PImfxJ1UiodMpb1cg&s' alt='friend' /> 
           <p className={contactModalStyle.name}>{searchUser.firstName} {searchUser.lastName}</p>
           <p className={contactModalStyle.email}>{searchUser.email}</p>
+          {/* display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button>  */}
           {display}
         </div>
       </div>
