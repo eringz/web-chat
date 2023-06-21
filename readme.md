@@ -50,7 +50,7 @@ Create a simple node app + any framework (MeteorJs/ReactJs/Angular and etc) of y
 -->
 
   <!-- 
-    //SERVER DEPENDENCIES
+    //SERVER DEPENDENCIES.
     "dependencies": {
         "cors": "^2.8.5",
         "dotenv": "^16.1.3",
