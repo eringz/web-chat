@@ -1,11 +1,12 @@
 import  React, { useEffect, useContext, useReducer, useState} from 'react'
-import style from '../assets/stylesheets/dashboard.module.css';
+import style from '../assets/stylesheets/webchat.module.css';
 import { FaFacebookMessenger,  } from "react-icons/fa";
 import { BsPeopleFill, BsFillBellFill } from "react-icons/bs";
 import pic from '../assets/img/ron.jpg';
 import { useNavigate } from "react-router-dom";
 import ChatHistory from './ChatHistory';
 import Contact from './Contact';
+import Chat from './Chat';
 import Notification from './Notification';
 import {SocketContext} from '../App';
 
@@ -34,23 +35,26 @@ const reducer = (state, action) => {
             return state;
     }
 }
+
     
 function WebChat(){
     const socket = useContext(SocketContext);
-    
     const navigate = useNavigate();
-
     const id = localStorage.getItem('id');
-    console.log('id',id);
 
-    
+    /**
+        * CLIENT EMIT TO SERVER EVENT CALLED 'searchUser' TO GET USER'S INFORMATIONS.
+        * DEVELOPER: RON SANTOS
+    */
     useEffect((res) => {
         socket.emit('searchUser', id);
     }, [socket])
 
+    /**
+        * CLIENT LISTENS TO SERVER EVENT CALLED 'user' FETCHING DATA FROM SERVER FOR USER INFORMATIONS.
+        * DEVELOPER: RON SANTOS
+    */
     const [u, dispatch] = useReducer(reducer, initialState);
-    
-
     useEffect(() => {
         socket.on('user', (res)=> {
             dispatch({
@@ -63,14 +67,22 @@ function WebChat(){
         });
     }, [socket]);
 
+    /**
+        * ADD EVENTLISTENERS CALLED 'logoutUser' TO CLEAR USER SESSIONS AND TO PERFORM LOGOUT OF A USER
+        * CLIENT EMITS TO SERVER EVENT CALLED 'logoutUser' FOR A LOGOUT INFORMATION.
+        * DEVELOPER: RON SANTOS
+    */
     const logoutUser = () => {
             localStorage.clear();
             socket.emit('logoutUser', id);
             navigate('/');
     }
     
+    /**
+        * CREATE DISPLAY CONDITIONS FOR COUNT FROM NAV1 TO DISPLAY IN NAV2
+        * DEVELOPER: RON SANTOS
+    */
     const [count, setCount] = React.useState(1);
-    //Handling click event handlers
     let display;
     if(count === 2){
         display = <Contact />;
@@ -96,11 +108,17 @@ function WebChat(){
                     <div className={style.nav2}>
                         {display}
                     </div>
+                    <Chat />
                 </UserContext.Provider>
-                <div className={style.chat}>
-                    <div className={style.chatHeader}></div>
-                    <div className={style.chatBody}><i class="fas fa-band-aid"></i></div>
-                </div>
+                {/* <div className={style.chat}>
+                    <div className={style.chatHeader}>
+                    <img className={style.img} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi3N0LBOCIWRLl7xqB5djlO0oL0PImfxJ1UiodMpb1cg&s' alt='friend' />  
+                        <span>ron santos</span>
+                    </div>
+                    <div className={style.chatBody}>
+
+                    </div>
+                </div> */}
                 <div className={style.account}>
                     <div className={style.accountHead}>
                         <img id={style.profilePic} src={pic} alt='profile' />

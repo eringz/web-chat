@@ -33,6 +33,10 @@ function Notification() {
   const [ u, dispatch] = useReducer(reducer, initialState); 
   const [isTrue, setIsTrue] = useState(false)
 
+  /**
+    * CLIENT LISTEN TO SERVER IN EVENT CALLED 'notification' TO GET USER'S NOTIFICATION REALTIME
+    * DEVELOPER: RON SANTOS
+  */
   useEffect(() => {
     socket.on('notification', (res) => {
       console.log('notification response:', res);

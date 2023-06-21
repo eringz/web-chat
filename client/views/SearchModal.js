@@ -37,6 +37,11 @@ function SearchModal({setOpenModal}){
     const emailRef = React.createRef();
     const [isUser, setIsUser] = useState(false);
 
+    /**
+        * ADD EVENTLISTENER CALLED 'searchUserHandle' AND HANDLE CONDITION PER EMAIL INPUT.
+        * CLIENT EMIT TO SERVER WITH AN EVENT CALLED 'searchUserByEmail' SEARCHING AN EXISTING USER BY PASSING EMAIL AS PARAMETER.
+        * DEVELOPER: RON SANTOS
+    */
     const searchUserHandle = () => {
         const email = emailRef.current.value;
         if(email === user.email) 
@@ -55,6 +60,10 @@ function SearchModal({setOpenModal}){
         }  
     }
     
+    /**
+        * CLIENT LISTEN TO SERVER WITH AN EVENT CALLED 'searcedhUserByEmail' WITH A RESPONSE OF SEARCHED USER FROM SERVER.
+        * DEVELOPER: RON SANTOS
+    */
     const [searchUser, dispatch] = useReducer(reducer, initialState);
     useEffect(() => {
         socket.on('searcedhUserByEmail', (res) => {

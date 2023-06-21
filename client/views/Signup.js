@@ -1,31 +1,21 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {SocketContext} from '../App';
-import {UserContext} from './WebChat';
 import makeToast from '../Toaster';
 
-
 function Signup() {
-    const socket = useContext(SocketContext);
+
     const firstNameRef = React.createRef();
     const lastNameRef = React.createRef();
     const emailRef = React.createRef();
     const passwordRef = React.createRef();
-    const imgRef = React.createRef();
     const navigate = useNavigate()
-    const [image, setImage] = useState('')
     
-    // const fileSelectedHandler = (e) => {
-    //     console.log('fsfsd');
-    //     let file = e.target.files[0].name;
-    //     setImage({
-    //         selectedFile: e.target.files[0],
-    //         filename: document.getElementById('file').value
-    //     })
-    //     console.log(file);
-    // }
-
+    /**
+        * ADD EVENTLISTENER CALLED 'registerHandler' FROM A SIGN UP FORM.
+        * PERFORM AN AXIOS PROMISE TO SAVE A USER INFORMATIONS.
+        * DEVELOPER: RON SANTOS
+    */
     const registerHandler = (e) => {
         e.preventDefault()
         const firstName = firstNameRef.current.value;
@@ -33,20 +23,11 @@ function Signup() {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         
-        // socket.emit('registerUser', {
-        //     firstName: firstName,
-        //     lastName: lastName,
-        //     email: email,
-        //     password: password 
-        // });
-        // console.log(image.name);
-        
         axios.post('http://localhost:8888/user/signup', {
             firstName,
             lastName,
             email,
             password,
-            // image
         })
             .then((response) => {
                 console.log('ok',response.data.message);
@@ -58,14 +39,6 @@ function Signup() {
                 makeToast('error', err.response.data.message);
             });
     }
-
-    // useEffect(() => {
-    //     socket.on('registeredUser', (res) => {
-    //         console.log(res);
-    //         makeToast('info', res.message);
-    //         navigate('/login');
-    //     });
-    // }, [socket]);
 
     return (
         <form encType="multipart/form-data" onSubmit={registerHandler} className='card'>

@@ -1,10 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {SocketContext} from '../App';
-import axios from 'axios';
 import makeToast from '../Toaster'
-import { Socket } from 'socket.io-client';
-
 
 function Login() {
     const socket = useContext(SocketContext);
@@ -12,42 +9,32 @@ function Login() {
     const passwordRef = React.createRef();
     const navigate = useNavigate()
 
-    const loginUser = (e) => {
-        e.preventDefault()
+    /**
+        * ADD EVENTLISTENER CALLED 'loginUser' MAKING EMAIL AND PASSWORD INPUT AS PARAMETERS FOR LOGIN
+        * CLIENT EMIT TO SERVER WITH AN EVENT CALLED 'loginUser' PASSING EMAIL AND PASSWORD PARAMETERS.
+        * DEVELOPER: RON SANTOS
+    */
+    const loginUser = () => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-
-        socket.emit('loginUser', {email: email, password: password});
-
-        // axios.post('http://localhost:8888/user/login', {
-        //     email,
-        //     password    
-        // })
-        //     .then((response) => {
-        //         makeToast('success', response.data.message)
-        //         // localStorage.setItem('CC_token', response.data.token);
-        //         localStorage.setItem('id', response.data.id);
-        //         navigate('/webchat');
-        //     })
-        //     .catch((err) => {
-        //         if(err && 
-        //             err.response && 
-        //             err.response.data && 
-        //             err.response.data.message
-        //         )
-        //             makeToast('error', err.response.data.message);
-        //     });
-
+        
+        socket.emit('loginUser', {email: email, password: password});    
     }
 
+    /**
+        * CLIENT LISTEN TO SERVER WITH AN EVENT CALLED 'logUser' FETCH RESPONSE DATA FROM SERVER AND.
+        * CLIENT EMITS TO SERVER WITH AN EVENT CALLED 'getPrivateChatrooms' REQUEST TO SERVER EXISTING PRIVATE CHATROOMS AVAILABLE PER USER.
+        * DEVELOPER: RON SANTOS
+    */
     useEffect(() =>{
         socket.on('logUser', (res) => {
             makeToast('success', res.message);
             localStorage.setItem('id', res.user._id);
+            socket.emit('getPrivateChatrooms',res.user._id);
             navigate('/webchat');
         });
     }, [socket]);
-    
+
     return (
         <div className='card'>
             <div className='cardBody'>
@@ -67,6 +54,7 @@ function Login() {
                         id='password' 
                         placeholder='Password' 
                         ref={passwordRef}
+                        onKeyPress={(e) => { e.key === 'Enter' && loginUser()}}
                     />
                 </div>
                 <button onClick={loginUser} className='login-button'>Log in</button>

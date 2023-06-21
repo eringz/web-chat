@@ -11,8 +11,11 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
   const socket = useContext(SocketContext);
 
   let display;
+
   /* 
-    * CREATE submitHandler FUNCTION TO MAKE A CLIENT EMIT CALLED sendContactRequest.
+    * ADD EVENTLISTENER CALLED 'contactRequestHandler' TO PERFORM A REQUEST TO SERVER.
+    * CLIENT EMIT TO SERVER WITH AN EVENT CALLED 'sendContactRequest' AND PASSING RECEIVER ID AND SENDER ID WITH AN ACTION AS PARAMETERS
+    * DEVELOPER: RON SANTOS
   */
   const contactRequestHandler = () => {
     socket.emit('sendContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'sent you a friend request'});
@@ -20,23 +23,22 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
     setIsUser(false);
   }
 
+  /* 
+    * ADD EVENT LISTENER CALLED 'cancelContactRequestHandler' TO MAKE A CANCEL OF CONTACT REQUEST TO USER
+    * CLIENT EMIT TO SERVER WITH AN EVENT CALLED 'cancelContactRequest' TO REQUEST A CANCEL OF CONTACT REQUEST TO SERVER.
+    * DEVELOPER: RON SANTOS
+  */
   const cancelContactRequestHandler = () => {
-    socket.emit('cancelContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'sent you a friend request'});
+    socket.emit('cancelContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'cancel a contact request'});
     makeToast('info', `You cancel a contact request with ${searchUser.firstName}.`);
     setIsUser(false);
     
   }
 
-  /*
-    * INVOKE USEFFECT HOOK TO PERFORM A CLIENT LISTEN CALLED contactRequestMessage.
-    * HANDLE MAKETOAST TO MAKE AN ALERT MESSAGE TO A USER THAT SENDS A CONTACT REQUEST.
+  /* 
+    * CREATING CONDITIONS FOR A SEARCH USER TO DETERMINE THE BUTTON TO RENDER
+    * DEVELOPER: RON SANTOS
   */
-  useEffect(() =>{
-
-  }, []);
-
-  const [isPending, setIsPending] = useState(false)
-  
   if(searchUser.id !== '')
   {
     console.log('length', searchUser.contactRequests.length);
@@ -53,6 +55,7 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
       }
     }
   }
+  
   if(searchUser.contactRequests.length === 0 )
   {
       console.log('fsdfsdffsd');
