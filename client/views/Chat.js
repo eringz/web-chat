@@ -29,12 +29,11 @@ function Chat()
 {
     const socket = useContext(SocketContext);
     const user = useContext(UserContext);
-    console.log('user', user.id)
-
     /**
         * CLIENT LISTEN TO SERVER AN EVENT CALLED 'joinUser' FETCHING THE PRIVATE ROOM OF USERS 
         * DEVELOPER: RON SANTOS
     */
+   console.log('chat user',user.id);
     const [privateChatroom, dispatch] = useReducer(reducer, initialState);
     const [messageLists, setMessageLists] = useState([]);
     useEffect(() => {
@@ -51,7 +50,7 @@ function Chat()
             setMessageLists(res.privateChatroom.contents);
 
         });
-    }, []);
+    }, [user]);
     
     /**
         * ADD EVENTLISTENER 'sendMessage' TO CREATE THE ROOM AUTH MESSAGE AND TIME. 
@@ -85,8 +84,7 @@ function Chat()
     */
     useEffect(() => {
         socket.on('receiveMessage', (res) => {
-            console.log('message result:', res.contents);
-            setMessageLists((list) => [...list, res.contents])
+            setMessageLists( res.contents)
         });
     }, [socket] )
 

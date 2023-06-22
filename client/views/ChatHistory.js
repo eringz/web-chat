@@ -13,10 +13,15 @@ function ChatHistory() {
         * DEVELOPER: RON SANTOS
     */
     const [privateChatroomLists, setPrivateChatroomLists] = useState([]);
-    useEffect(() => {
+    
+    if(privateChatroomLists.length === 0)
+    {
         socket.emit('getPrivateChatrooms', user.id);
-    }, [socket]);
+    }
 
+
+    
+    console.log('pchatlists', privateChatroomLists);
     /**
         * CLIENT LISTEN TO SERVER AN EVENT CALLED 'privateChatroomLists' OF FETCH DATA OF ALL EXISTING CHATOOMS.
         * DEVELOPER: RON SANTOS

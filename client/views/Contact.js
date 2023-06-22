@@ -43,7 +43,6 @@ function Contact() {
   const contactHandler = (e) => {
     e.preventDefault();
     socket.emit('createRoom', [user.id, e.target.id.value]);
-    makeToast('info', e.target.id.value);
   }
 
   return (

@@ -487,7 +487,7 @@ io.on('connection', (socket) => {
             }
         }
 
-        io.to(userTarget).emit('', newMessage);
+        io.to(data.room).emit('receiveMessage', newMessage);
  
 
     });

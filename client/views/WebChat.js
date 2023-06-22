@@ -54,7 +54,7 @@ function WebChat(){
         * CLIENT LISTENS TO SERVER EVENT CALLED 'user' FETCHING DATA FROM SERVER FOR USER INFORMATIONS.
         * DEVELOPER: RON SANTOS
     */
-    const [u, dispatch] = useReducer(reducer, initialState);
+    const [user, dispatch] = useReducer(reducer, initialState);
     useEffect(() => {
         socket.on('user', (res)=> {
             dispatch({
@@ -104,29 +104,21 @@ function WebChat(){
                     <button onClick={() => {setCount(2)} } className={style.navButton}><BsPeopleFill size="40" /></button>
                     <button onClick={() => {setCount(3)} } className={style.navButton}><BsFillBellFill size="40" /></button>
                 </div>
-                <UserContext.Provider value={u}>
+                <UserContext.Provider value={user}>
                     <div className={style.nav2}>
                         {display}
                     </div>
                     <Chat />
                 </UserContext.Provider>
-                {/* <div className={style.chat}>
-                    <div className={style.chatHeader}>
-                    <img className={style.img} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi3N0LBOCIWRLl7xqB5djlO0oL0PImfxJ1UiodMpb1cg&s' alt='friend' />  
-                        <span>ron santos</span>
-                    </div>
-                    <div className={style.chatBody}>
 
-                    </div>
-                </div> */}
                 <div className={style.account}>
                     <div className={style.accountHead}>
                         <img id={style.profilePic} src={pic} alt='profile' />
                         <span className={style.logout} onClick={logoutUser}>Log out</span>
                     </div>
-                    <p>id: {u.id}</p>
-                    <p>Name: {u.firstName} {u.lastName}</p>
-                    <p>Email: {u.email}</p>
+                    <p>id: {user.id}</p>
+                    <p>Name: {user.firstName} {user.lastName}</p>
+                    <p>Email: {user.email}</p>
                 </div>
             </div>
         </> 

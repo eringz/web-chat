@@ -79,17 +79,6 @@ function Signup() {
                         ref={passwordRef} 
                     />
                 </div>
-                <div className='inputGroup'>
-                    <input 
-                        type='file' 
-                        name='image' 
-                        id='image' 
-                        accept='image/*'
-                        // onChange={fileSelectedHandler}
-                        onChange={(e) => {setImage(e.target.files[0])}}
-                        // ref={imgRef} 
-                    />
-                </div>
                 <button type="submit" className='signup-button'>Sign up</button>
                 <Link to='/login'>Log in</Link>
             </div>
