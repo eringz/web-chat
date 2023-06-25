@@ -12,6 +12,7 @@ const initialState = {
     firstName: '',
     lastName: '',
     email: '',
+    image: {},
     constactRequests: []
 }
 
@@ -23,6 +24,7 @@ const reducer = (state, action) => {
                 firstName: action.firstName,
                 lastName: action.lastName,
                 email: action.email,
+                image: action.image,
                 contactRequests: action.contactRequests
             }
         default:
@@ -81,6 +83,7 @@ function SearchModal({setOpenModal}){
                     firstName: res.user.firstName, 
                     lastName: res.user.lastName,
                     email:  res.user.email,
+                    image: res.user.img.data,
                     contactRequests: res.user.contactRequests
                 });
                 
@@ -101,7 +104,11 @@ function SearchModal({setOpenModal}){
                     </button>
                 </div>
                 <div>
-                    <input  type='email' placeholder="Email address" ref={emailRef}/>
+                    <input  
+                         onKeyPress={(e) => { e.key === 'Enter' && searchUserHandle()}}
+                        type='email' 
+                        placeholder="Email address" 
+                        ref={emailRef}/>
                     <button onClick={searchUserHandle} className={searchModalstyle.search} ><BsSearch size="30" /></button>
                 </div>
             </div>

@@ -18,6 +18,7 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
     * DEVELOPER: RON SANTOS
   */
   const contactRequestHandler = () => {
+    console.log('fsfsdf');
     socket.emit('sendContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'sent you a friend request'});
     makeToast('info', `You make a contact request with ${searchUser.firstName}. Please wait for confirmation.`);
     setIsUser(false);
@@ -32,8 +33,8 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
     socket.emit('cancelContactRequest', {receiverId: searchUser.id, senderId: user.id, action: 'cancel a contact request'});
     makeToast('info', `You cancel a contact request with ${searchUser.firstName}.`);
     setIsUser(false);
-    
   }
+
 
   /* 
     * CREATING CONDITIONS FOR A SEARCH USER TO DETERMINE THE BUTTON TO RENDER
@@ -58,7 +59,6 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
   
   if(searchUser.contactRequests.length === 0 )
   {
-      console.log('fsdfsdffsd');
       display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button> 
   }
 
@@ -66,9 +66,10 @@ function SearchUserModal({searchUser, setIsUser, pending}) {
     <div className={ contactModalStyle.modalBackground}>
       <div className={contactModalStyle.modalContainer}>
         <div className="body">
-          <img className={contactModalStyle.img} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi3N0LBOCIWRLl7xqB5djlO0oL0PImfxJ1UiodMpb1cg&s' alt='friend' /> 
+          <img className={contactModalStyle.img} src={`data:image/*;base64, ${btoa(String.fromCharCode(...new Uint8Array(searchUser.image.data)))}`} alt='friend' /> 
           <p className={contactModalStyle.name}>{searchUser.firstName} {searchUser.lastName}</p>
           <p className={contactModalStyle.email}>{searchUser.email}</p>
+
           {/* display = <button onClick={contactRequestHandler} className={contactModalStyle.add}>ADD</button>  */}
           {display}
         </div>

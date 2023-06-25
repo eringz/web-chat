@@ -18,6 +18,7 @@ const initialState = {
     firstName: '',
     lastName: '',
     email: '',
+    image: {},
     constactRequests: []
 }
 
@@ -29,6 +30,7 @@ const reducer = (state, action) => {
                 firstName: action.firstName,
                 lastName: action.lastName,
                 email: action.email,
+                image: action.image,
                 contactRequests: action.contactRequests
             }
         default:
@@ -57,12 +59,14 @@ function WebChat(){
     const [user, dispatch] = useReducer(reducer, initialState);
     useEffect(() => {
         socket.on('user', (res)=> {
+            console.log('image user', res);
             dispatch({
                 type:"USER",
                 id: res.user._id,
                 firstName: res.user.firstName,
                 lastName: res.user.lastName,
-                email: res.user.email
+                email: res.user.email,
+                image: res.user.img.data 
             })
         });
     }, [socket]);
@@ -113,7 +117,10 @@ function WebChat(){
 
                 <div className={style.account}>
                     <div className={style.accountHead}>
-                        <img id={style.profilePic} src={pic} alt='profile' />
+                        <img id={style.profilePic} 
+                            src={`data:image/*;base64, ${btoa(String.fromCharCode(...new Uint8Array(user.image.data)))}`} 
+                            alt='profile' 
+                        />
                         <span className={style.logout} onClick={logoutUser}>Log out</span>
                     </div>
                     <p>id: {user.id}</p>

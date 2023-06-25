@@ -4,15 +4,21 @@
     .id {
         margin: 20px;
     }
+        .id p {
+            display: inline-block;
+            vertical-align: top;
+            width: 80%;
+            font-size: 1.9rem;
+        }
 
-    .span{
-        display: inline-block;
-        vertical-align: top;
-        padding: 2px;
-        margin-left: 57%;
-        font-size: .65rem;
-        border-radius: 100px;
-    }
+        .span{
+            display: inline-block;
+            vertical-align: top;
+            padding: 2px;
+            /* margin-left: 57%; */
+            font-size: .65rem;
+            border-radius: 100px;
+        }
     .span:hover{
         background: #E5E5E5;
     }

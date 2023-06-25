@@ -48,7 +48,7 @@ function Contact() {
   return (
     <>
       <div className={contactStyle.id}>
-        Contact 
+        <p>Contact </p>
         <span onClick={() => {setModalOpen(true)}} className={contactStyle.span}><GrAdd size="30" /></span>
       </div>
       {

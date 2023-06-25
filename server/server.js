@@ -55,9 +55,12 @@ io.on('connection', (socket) => {
                 id:1,
                 firstName: 1,
                 lastName: 1,
-                email: 1
+                email: 1,
+                img: 1
             }
-            );
+        );
+
+        console.log('login user:', user);
             
         if(user)
         {
@@ -89,6 +92,7 @@ io.on('connection', (socket) => {
                 firstName: 1,
                 lastName: 1,
                 email: 1,
+                img: 1,
                 contacts: 1,
                 contactRequests: 1,
                 notifications: 1
@@ -154,6 +158,7 @@ io.on('connection', (socket) => {
                 firstName: 1,
                 lastName: 1,
                 email: 1,
+                img: 1,
                 contacts: 1,
                 contactRequests: 1,
                 notifications: 1
@@ -439,7 +444,7 @@ io.on('connection', (socket) => {
         * DEVELOPER: RON SANTOS
     */
     socket.on('getPrivateChatrooms', async (data) => {
-        console.log('user', data);
+        console.log('user1', data);
         const privateChatrooms = await Chatroom.find({membersId: data});
         socket.emit('privateChatroomLists', privateChatrooms);
     });

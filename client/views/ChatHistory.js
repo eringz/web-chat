@@ -14,10 +14,10 @@ function ChatHistory() {
     */
     const [privateChatroomLists, setPrivateChatroomLists] = useState([]);
     
-    if(privateChatroomLists.length === 0)
-    {
-        socket.emit('getPrivateChatrooms', user.id);
-    }
+    // if(privateChatroomLists.length === 0)
+    // {
+    //     socket.emit('getPrivateChatrooms', user.id);
+    // }
 
 
     
